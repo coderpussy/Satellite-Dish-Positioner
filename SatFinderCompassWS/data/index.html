@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Satfinder</title>
+        <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png" href="favicon.png">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+    </head>
+
+    <body>
+        <input id="dark-mode" class="dark-mode-checkbox visually-hidden" type="checkbox" />
+
+        <div class="topnav">
+            <div class="box box1">
+                <div>SAT-Steuerung</div>
+            </div>
+            <div class="box box2">
+                <div class="manual-cross toggle-overlay manual">
+                    <div class="inner">
+                        <div class="dot"></div>
+                    </div>
+                </div>
+                <div class="gear toggle-overlay settings">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="gear-inner"></div>
+                </div>
+                <div>
+                    <label class="dark-mode-label" for="dark-mode">
+                        <span class="toggle">
+                            <span class="circle"></span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="theme-container">
+
+            <table>
+                <tr>
+                    <td>Level:</td>
+                    <td><meter id="led_level" value="0" min="0" max="100"></meter></td>
+                </tr>
+            </table>
+            
+            <hr>
+
+            <table>
+                <tr>
+                    <td>Azimut:</td><td><span id="azimut"></span> &deg;</td>
+                    <td>Go Azimut:</td><td><span id="s_azimut"></span> &deg;</td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <td>Elevation:</td><td><span id="elevation"></span> &deg;</td>
+                    <td>Go Elevation:</td><td><span id="s_elevation"></span> &deg;</td>
+                </tr>
+            </table>
+
+            <hr>
+
+            <table>
+                <tr><td>Rotor:</td><td><span id="rotor"></span> &deg;</td></tr>
+            </table>
+                
+            <p>-70<input type="range" min="-70" max="70" step="1" value="0" class="slider" id="myRotorRange">+70</p>
+                
+            <p>
+                <input type="button" class="button" value="-Step" onclick="button_clicked('rotor_down_step')">
+                <input type="button" class="button" value="Down" onclick="button_clicked('rotor_down')">
+                <input type="button" class="button" value="Up" onclick="button_clicked('rotor_up')">
+                <input type="button" class="button" value="Step+" onclick="button_clicked('rotor_up_step')">
+            </p>
+
+            <hr>
+                
+            <table>
+                <tr><td>Delta Azimut:</td><td><span id="d_azimut"></span> &deg;</td></tr>
+            </table>
+                
+            <p>-50<input type="range" min="-50" max="50" step="0.5" value="0" class="slider" id="myAzRange">+50</p>
+                
+            <p>
+                <input type="button" class="button" value="Down" onclick="button_clicked('az_down')">
+                <input type="button" class="button" value="Up" onclick="button_clicked('az_up')">
+            </p>
+
+            <hr>
+            
+            <table>
+                <tr><td>Delta Elevation:</td><td><span id="d_elevation"></span> &deg;</td></tr>
+            </table>
+                
+            <p>-8<input type="range" min="-8" max="8" step="0.1" value="0" class="slider" id="myElRange">+8</p>  
+
+            <p>
+                <input type="button" class="button" value="Down" onclick="button_clicked('el_down')"> 
+                <input type="button" class="button" value="Up" onclick="button_clicked('el_up')">
+            </p> 
+
+            <hr>
+            
+            <table>
+                <tr><td>Auto:</td><td><span id="state"></span></td></tr>
+            </table>
+            
+            <p>
+                <input type="button" class="button" value="On" onclick="button_clicked('on')"> 
+                <input type="button" class="button" value="Off" onclick="button_clicked('off')">
+                <input type="button" class="button" value="R-Off" onclick="button_clicked('r_off')">
+            </p>
+
+            <br>
+            
+            <div id="overlay-manual">
+                <span class="close toggle-overlay manual"></span>
+                <div class="content">
+                    <h1>Manual Control</h1>
+                    <div class="formcontrols">
+                        <table class="degrees">
+                            <tr>
+                                <td>Azimut: <span id="om_azimut"></span> &deg;</td>
+                                <td>Elevation: <span id="om_elevation"></span> &deg;</td>
+                            </tr>
+                        </table>
+                
+                        <br />
+
+                        <div class="control-top">
+                            <div id="UP" class="control-button">
+                                <span class="arrow arrow-top" onclick="button_clicked('om_el_up')"></span>
+                            </div>
+                        </div>
+                        <div class="control-middle">
+                            <div class="left">
+                                <div id="LEFT" class="control-button" onclick="button_clicked('om_az_down')">
+                                    <span class="arrow arrow-left"></span>
+                                </div>
+                            </div>
+                            <div class="center">
+                                <div id="STOP" class="control-button">
+                                    <span class="circle-middle"></span>
+                                </div>
+                            </div>
+                            <div class="right">
+                                <div id="RIGHT" class="control-button">
+                                    <span class="arrow arrow-right" onclick="button_clicked('om_az_up')"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-bottom">
+                            <div id="DOWN" class="control-button">
+                                <span class="arrow arrow-bottom" onclick="button_clicked('om_el_down')"></span>
+                            </div>
+                        </div>
+
+                        <br />
+
+                        <fieldset>
+                            <legend>Motor Settings:</legend>
+                            <div class="control-form">
+                                Elevator:<br />
+                                <div class="control-input">
+                                    <div class="manual-control">
+                                        <label for="om_time">Time:</label>
+                                        <input type="number" id="om_time" name="om_time" placeholder="ms" />
+                                    </div>
+                                </div>
+                                <div class="control-input">
+                                    <div class="manual-control">
+                                        <label for="om_speed">Speed:</label>
+                                        <input type="number" id="om_speed" name="om_speed" />
+                                    </div>
+                                </div>
+                                <br />Azimut:<br />
+                                <div class="control-input">
+                                    <div class="manual-control">
+                                        <label for="om_steps">Steps:</label>
+                                        <select id="om_steps" name="om_steps">
+                                            <option value="short">short</option>
+                                            <option value="long">long</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+            <div id="overlay-settings">
+                <span class="close toggle-overlay settings"></span>
+                <div class="content">
+                    <h1>Settings</h1>
+                    <div class="formcontrols">
+                        <table>
+                            <tr><td>Azimut (90-270):</td><td><input type="number" id="oc_azimut"></td></tr>
+                            <tr><td>Elevation (10-50):</td><td><input type="number" id="oc_elevation"></td></tr>
+                            <tr><td>Azimut Offset (+/-90):</td><td><input type="number" id="oc_az_offset"></td></tr>
+                            <tr><td>Elevation Offset (+/-90):</td><td><input type="number" id="oc_el_offset"></tr>
+                            <tr><td>Motor Speed (500-1023):</td><td><input type="number" id="oc_motor_speed"></tr>
+                        </table>
+                        
+                        <p>
+                            <input type="button" class="button toggle-overlay settings" value="Back"> 
+                            <input id="savesettings" type="button" class="button" value="Set" onclick="button_clicked_set()"> 
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <script src="js/index.js"></script>
+    </body>
+</html>

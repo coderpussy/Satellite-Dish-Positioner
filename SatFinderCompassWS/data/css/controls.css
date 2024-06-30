@@ -1,0 +1,40 @@
+/* circle common style */
+.circle-middle {
+    height: 24px;
+    width: 24px;
+    color: #fff;
+    border-radius: 50%;
+    border: 3px solid;
+    position: relative;
+    display: inline-block;
+}
+
+/* arrow common style */
+.arrow {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-top: 3px solid #0fc0c0;
+    border-right: 3px solid #0fc0c0;
+    border-radius: 3px;
+}
+
+.arrow-top {
+    margin-top: 10px;
+    transform: rotate(-45deg);
+}
+
+.arrow-right {
+    margin-right: 10px;
+    transform: rotate(45deg);
+}
+
+.arrow-bottom {
+    margin-bottom: 10px;
+    transform: rotate(135deg);
+}
+
+.arrow-left {
+    margin-left: 10px;
+    transform: rotate(-135deg);
+}
