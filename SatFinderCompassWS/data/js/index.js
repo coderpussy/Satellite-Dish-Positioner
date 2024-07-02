@@ -105,10 +105,6 @@ function onMessage(event) {
     action = data.action;
     console.log('message:',data);
 
-    if (action == "success") {
-        getValues();
-    }
-
     if (action == "getvalues") {
         led_level.value = (data.led_level *1).toFixed(1);
         state.innerText = data.state;
@@ -138,6 +134,8 @@ function onMessage(event) {
         oc_az_offset.value = data.az_offset;
         oc_motor_speed.value = data.motor_speed;
     }
+
+    getValues();
 }
 
 function button_clicked(action) {
@@ -162,8 +160,6 @@ function button_clicked(action) {
     else {
         websocket.send(JSON.stringify({"action":action}));
     }
-
-    //getValues();
 }
 
 function getValues() {

@@ -185,10 +185,10 @@ void notifyClients() {
   //const uint8_t size = JSON_OBJECT_SIZE(1);
   StaticJsonDocument<48> json;
   
-  json["action"] = "success";
-  WebSerial.print(F("success\n"));
+  json["action"] = "getvalues";
+  //WebSerial.print(F("getvalues\n"));
 
-  char data[24];
+  char data[26];
   serializeJson(json, data);
   ws.textAll(data);
 }
