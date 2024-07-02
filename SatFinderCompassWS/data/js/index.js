@@ -160,7 +160,7 @@ function button_clicked(action) {
         }
     }
     else {
-        websocket.send(JSON.stringify({"action":key}));
+        websocket.send(JSON.stringify({"action":action}));
     }
 
     //getValues();
