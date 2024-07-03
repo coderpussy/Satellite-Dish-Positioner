@@ -62,7 +62,8 @@ const char *filename = "/settings.json";
 
 // variables to save values from HTML form
 const char* act;
-String action;
+// initial action string value
+String action = "getvalues";
 
 float Azimut = 0, Elevation = 0;
 float sAzimut = 0, sElevation = 0;
@@ -182,15 +183,7 @@ void recvMsg(uint8_t *data, size_t len){
 }
 
 void notifyClients() {
-  //const uint8_t size = JSON_OBJECT_SIZE(1);
-  StaticJsonDocument<48> json;
-  
-  json["action"] = "getdata";
-  //WebSerial.print(F("getvalues\n"));
-
-  char data[24];
-  serializeJson(json, data);
-  ws.textAll(data);
+  handleGetData();
 }
 
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {

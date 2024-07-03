@@ -104,12 +104,14 @@ function onMessage(event) {
 
     action = data.action;
     console.log('message:',data);
-
-    if (action == "getdata") {
-        getValues();
-    }
-
-    if (action == "getvalues") {
+    
+    if (action == "getsettings" || action == "savesettings") {
+        oc_azimut.value = data.azimut;
+        oc_elevation.value = data.elevation;
+        oc_el_offset.value = data.el_offset;
+        oc_az_offset.value = data.az_offset;
+        oc_motor_speed.value = data.motor_speed;
+    } else {
         led_level.value = (data.led_level *1).toFixed(1);
         state.innerText = data.state;
         
@@ -117,7 +119,7 @@ function onMessage(event) {
         elevation.innerText = (data.elevation *1).toFixed(1);
         om_azimut.innerText = (data.azimut *1).toFixed(1);
         om_elevation.innerText = (data.elevation *1).toFixed(1);
-
+    
         s_azimut.innerText = (data.s_azimut *1).toFixed(1);
         s_elevation.innerText = (data.s_elevation *1).toFixed(1);
         
@@ -126,17 +128,9 @@ function onMessage(event) {
         
         output2.innerHTML = (data.d_elevation*1).toFixed(1);
         slider2.value = data.d_elevation;
-
+    
         output3.innerHTML = (data.rotor*1).toFixed(1);
         slider3.value = data.rotor;
-    }
-    
-    if (action == "getsettings" || action == "savesettings") {
-        oc_azimut.value = data.azimut;
-        oc_elevation.value = data.elevation;
-        oc_el_offset.value = data.el_offset;
-        oc_az_offset.value = data.az_offset;
-        oc_motor_speed.value = data.motor_speed;
     }
 }
 
