@@ -5,6 +5,11 @@ This is a complete restructured and extended sketch version of the original proj
 
 All needed sketch files are in [SatFinderCompassWS](https://github.com/coderpussy/Satellite-Dish-Positioner/tree/develop/SatFinderCompassWS) folder.
 
+You have to download [homeboyc's](https://github.com/asjdf/WebSerialLite) WebSerialLite.
+If you don't need WebSerialLite then just comment out all WebSerialLite related entries in ino sketch file.
+
+If you want to contribute, feel free to make suggestions.
+
 ## Introduction
 This is an automatical satellite dish positioner with an ESP8266 D1 Mini, a compass and an MPU. It controls the satellite dish direction with a Diseqc rotor (azimut) and a linear actuator (elevation). It uses an gyroscope device for elevation and a compass device for azimut control.
 
