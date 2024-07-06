@@ -3,7 +3,7 @@
 ## !!! IMPORTANT News !!!
 This is a complete restructured and extended sketch version of the original project based on websocket connection and LittleFS to keep frontend files. This also includes a complete reworked and restyled frontend with addtional manual control overlay and webserial light possibility to visualize backend console output over wireless Arduino OTA. More details about planned extensions, hardware rework and including e.g. GPS sensors will come soon.
 
-All needed sketch files are in SatFinderCompassWS folder.
+All needed sketch files are in [SatFinderCompassWS](https://github.com/coderpussy/Satellite-Dish-Positioner/tree/develop/SatFinderCompassWS) folder.
 
 ## Introduction
 This is an automatical satellite dish positioner with an ESP8266 D1 Mini, a compass and an MPU. It controls the satellite dish direction with a Diseqc rotor (azimut) and a linear actuator (elevation). It uses an gyroscope device for elevation and a compass device for azimut control.
