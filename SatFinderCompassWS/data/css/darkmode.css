@@ -23,12 +23,12 @@
 }
 
 .theme-container > table:first-child tr td:first-child {
-    padding-top: 3.6em;
+    padding-top: 4.2em;
     text-align: right;
 }
 
 .theme-container > table:first-child tr td:last-child {
-    padding-top: 3.6em;
+    padding-top: 4.2em;
 }
 
 .theme-container [id^="overlay-"] .formcontrols {

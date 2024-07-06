@@ -63,7 +63,7 @@ const char *filename = "/settings.json";
 // variables to save values from HTML form
 const char* act;
 // initial action string value
-String action = "getvalues";
+String action;
 
 float Azimut = 0, Elevation = 0;
 float sAzimut = 0, sElevation = 0;
@@ -359,7 +359,7 @@ void handleGetData() {
   const uint8_t size = JSON_OBJECT_SIZE(11);
   StaticJsonDocument<size> root;
 
-  root["action"] = action;
+  root["action"] = "getvalues";
   
   root["azimut"] = Azimut;
   root["elevation"] = Elevation;
