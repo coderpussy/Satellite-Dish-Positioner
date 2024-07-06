@@ -5,7 +5,7 @@ This is a complete restructured and extended sketch version of the original proj
 
 All needed sketch files are in [SatFinderCompassWS](https://github.com/coderpussy/Satellite-Dish-Positioner/tree/develop/SatFinderCompassWS) folder.
 
-You have to download [homeboyc's](https://github.com/asjdf/WebSerialLite) WebSerialLite.
+You have to download homeboyc's [WebSerialLite](https://github.com/asjdf/WebSerialLite).
 If you don't need WebSerialLite then just comment out all WebSerialLite related entries in ino sketch file.
 
 If you want to contribute, feel free to make suggestions.
