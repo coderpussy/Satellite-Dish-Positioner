@@ -48,11 +48,11 @@
 
 //Enter your AP SSID and PASSWORD
 const char *ssid_ap = "satfinder";     // Set WLAN name
-const char *password_ap = "levin1989";  // Set password
+const char *password_ap = "xxxxxxxx";  // Set password
 
 //Enter your STA SSID and PASSWORD
-const char* ssid_sta = "Superpueppi-WLAN";
-const char* password_sta = "10250562589012613526";
+const char* ssid_sta = "My-WLAN";
+const char* password_sta = "xxxxxxxx";
 
 float Astra_Az = 173.34, Astra_El = 29.40, El_Offset = -18, Az_Offset = -10.0; // Astra 19.2 position and dish specific offsets
 int motorSpeed = 700;  // Actuator speed     // Change (lower) this if dish is begining to swing
