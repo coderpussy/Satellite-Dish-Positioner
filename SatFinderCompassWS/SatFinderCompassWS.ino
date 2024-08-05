@@ -31,6 +31,7 @@
 #include <ArduinoOTA.h>
 #include <TinyMPU6050.h>
 #include <QMC5883LCompass.h>
+#include "config.h"
 
 //    SDA => D2
 //    SCL => D1
@@ -40,25 +41,6 @@
 #define motor2 D0       // Linear Actuator 2
 #define UP 1
 #define DOWN 2
-
-#define Az_PCB_Correction 90  // Correction for compass direction of pcb mount
-
-// Wifi: Select AP or Client
-#define WiFiMode_AP_STA 0            // Defines WiFi Mode 0 -> AP (with IP:192.168.4.1 and  1 -> Station (client with IP: via DHCP)
-
-//Enter your AP SSID and PASSWORD
-const char *ssid_ap = "satfinder";     // Set WLAN name
-const char *password_ap = "xxxxxxxx";  // Set password
-
-//Enter your STA SSID and PASSWORD
-const char* ssid_sta = "My-WLAN";
-const char* password_sta = "xxxxxxxx";
-
-float Astra_Az = 173.34, Astra_El = 29.40, El_Offset = -18, Az_Offset = -10.0; // Astra 19.2 position and dish specific offsets
-int motorSpeed = 700;  // Actuator speed     // Change (lower) this if dish is begining to swing
-
-// Define config file on LittleFS
-const char *filename = "/settings.json";
 
 // variables to save values from HTML form
 const char* act;
@@ -97,6 +79,14 @@ AsyncWebServer server(80);
 
 // Create a WebSocket object
 AsyncWebSocket ws("/ws");
+
+// Initialize Serial
+void initSerial() {
+  Serial.begin(115200); // 115200 is the speed used to print boot messages.
+  Serial.setDebugOutput(false); // Show debug output
+  Serial.println();
+  Serial.println("Initializing serial connection DONE.");
+}
 
 // Initialize LittleFS
 void initFS() {
@@ -255,8 +245,9 @@ void initWebSocket() {
 }
 
 void setup(void) {
-  Serial.begin(115200);
-
+  initSerial();
+  Serial.printf("Application version: %s\n", APP_VERSION);
+  
   initFS();
   initWiFi();
 
@@ -576,50 +567,57 @@ void om_motor(int direction) {
 }
 
 // Loads the configuration from a file
-void loadConfiguration(const char *filename) {
-  float tmp = 0;
+void loadConfiguration(const char* filename) {
+  if (LittleFS.exists(filename)) {
+    // Open file for reading
+    File file = LittleFS.open(filename, "r");
   
-  // Open file for reading
-  File file = LittleFS.open(filename, "r");
-
-  // Allocate a temporary JsonDocument
-  // Don't forget to change the capacity to match your requirements.
-  // Use arduinojson.org/v6/assistant to compute the capacity.
-  const uint8_t size = JSON_OBJECT_SIZE(5);
-  StaticJsonDocument<size> doc;
-
-  // Deserialize the JSON document
-  DeserializationError error = deserializeJson(doc, file);
+    // Allocate a temporary JsonDocument
+    // Don't forget to change the capacity to match your requirements.
+    // Use arduinojson.org/v6/assistant to compute the capacity.
+    const uint8_t size = JSON_OBJECT_SIZE(10);
+    StaticJsonDocument<size> doc;
   
-  if (error) {
-    Serial.println(F("Failed to read file, using default configuration"));
-    WebSerial.print(F("Failed to read file, using default configuration\n"));
+    // Deserialize the JSON document
+    DeserializationError error = deserializeJson(doc, file);
+
+    // Close the file
+    file.close();
+    
+    if (error) {
+      Serial.println(F("Failed to read file, using default configuration"));
+      WebSerial.print(F("Failed to read file, using default configuration\n"));
+    } else {
+      Serial.println(F("Successfully read file, using saved configuration"));
+      WebSerial.print(F("Successfully read file, using saved configuration\n"));
+      
+      float tmp = 0;
+  
+      // Copy values from the JsonDocument to the Config
+      tmp = doc["Astra_Az"];
+      if ((tmp >= 90) && (tmp <= 270)) Astra_Az = tmp;
+      
+      tmp = doc["Astra_El"];
+      if ((tmp >= 10) && (tmp <= 50)) Astra_El = tmp;
+      
+      tmp = doc["El_Offset"];
+      if (abs(tmp) <= 90) El_Offset = tmp;
+      
+      tmp = doc["Az_Offset"];
+      if (abs(tmp) <= 90) Az_Offset = tmp;
+      
+      tmp = doc["motorSpeed"];
+      if ((tmp >= 500) && (tmp < 1024)) motorSpeed = trunc(tmp);
+    }
   }
-
-  // Copy values from the JsonDocument to the Config
-  tmp = doc["Astra_Az"];
-  if ((tmp >= 90) && (tmp <= 270)) Astra_Az = tmp;
-  
-  tmp = doc["Astra_El"];
-  if ((tmp >= 10) && (tmp <= 50)) Astra_El = tmp;
-  
-  tmp = doc["El_Offset"];
-  if (abs(tmp) <= 90) El_Offset = tmp;
-  
-  tmp = doc["Az_Offset"];
-  if (abs(tmp) <= 90) Az_Offset = tmp;
-  
-  tmp = doc["motorSpeed"];
-  if ((tmp >= 500) && (tmp < 1024)) motorSpeed = trunc(tmp);
-
-  // Close the file
-  file.close();
 }
 
 // Saves the configuration to a file
-void saveConfiguration(const char *filename) {
-  // Delete existing file, otherwise the configuration is appended to the file
-  LittleFS.remove(filename);
+void saveConfiguration(const char* filename) {
+  if (LittleFS.exists(filename)) {
+    // Delete existing file, otherwise the configuration is appended to the file
+    LittleFS.remove(filename);
+  }
 
   // Open file for writing
   File file = LittleFS.open(filename, "w");
@@ -632,7 +630,7 @@ void saveConfiguration(const char *filename) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/assistant to compute the capacity.
-  const uint8_t size = JSON_OBJECT_SIZE(5);
+  const uint8_t size = JSON_OBJECT_SIZE(10);
   StaticJsonDocument<size> doc;
   
   // Set the values in the document

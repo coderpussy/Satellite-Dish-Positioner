@@ -244,7 +244,7 @@ div.formcontrols {
     opacity: 1;
     visibility: visible;
     z-index: 2;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 #overlay-manual .close, #overlay-settings .close {
