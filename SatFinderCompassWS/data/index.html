@@ -68,13 +68,13 @@
                 <tr><td>Rotor:</td><td><span id="rotor"></span> &deg;</td></tr>
             </table>
                 
-            <p>-70<input type="range" min="-70" max="70" step="1" value="0" class="slider" id="myRotorRange">+70</p>
+            <p>-70<input type="range" min="-70" max="70" step="1" value="0" class="slider" id="rotor_range" />+70</p>
                 
             <p>
-                <input type="button" class="button" value="-Step" onclick="button_clicked('rotor_down_step')">
-                <input type="button" class="button" value="Down" onclick="button_clicked('rotor_down')">
-                <input type="button" class="button" value="Up" onclick="button_clicked('rotor_up')">
-                <input type="button" class="button" value="Step+" onclick="button_clicked('rotor_up_step')">
+                <button type="button" class="button" id="rotor_down_step">-Step</button>
+                <button type="button" class="button" id="rotor_down">Down</button>
+                <button type="button" class="button" id="rotor_up">Up</button>
+                <button type="button" class="button" id="rotor_up_step">Step+</button>
             </p>
 
             <hr>
@@ -83,11 +83,11 @@
                 <tr><td>Delta Azimut:</td><td><span id="d_azimut"></span> &deg;</td></tr>
             </table>
                 
-            <p>-50<input type="range" min="-50" max="50" step="0.5" value="0" class="slider" id="myAzRange">+50</p>
+            <p>-50<input type="range" min="-50" max="50" step="0.5" value="0" class="slider" id="d_azimut_range" />+50</p>
                 
             <p>
-                <input type="button" class="button" value="Down" onclick="button_clicked('az_down')">
-                <input type="button" class="button" value="Up" onclick="button_clicked('az_up')">
+                <button type="button" class="button" id="az_down">Down</button>
+                <button type="button" class="button" id="az_up">Up</button>
             </p>
 
             <hr>
@@ -96,11 +96,11 @@
                 <tr><td>Delta Elevation:</td><td><span id="d_elevation"></span> &deg;</td></tr>
             </table>
                 
-            <p>-8<input type="range" min="-8" max="8" step="0.1" value="0" class="slider" id="myElRange">+8</p>  
+            <p>-8<input type="range" min="-8" max="8" step="0.1" value="0" class="slider" id="d_elevation_range" />+8</p>  
 
             <p>
-                <input type="button" class="button" value="Down" onclick="button_clicked('el_down')"> 
-                <input type="button" class="button" value="Up" onclick="button_clicked('el_up')">
+                <button type="button" class="button" id="el_down">Down</button>
+                <button type="button" class="button" id="el_up">Up</button>
             </p> 
 
             <hr>
@@ -110,9 +110,9 @@
             </table>
             
             <p>
-                <input type="button" class="button" value="On" onclick="button_clicked('on')"> 
-                <input type="button" class="button" value="Off" onclick="button_clicked('off')">
-                <input type="button" class="button" value="R-Off" onclick="button_clicked('r_off')">
+                <button type="button" class="button" id="on">On</button>
+                <button type="button" class="button" id="off">Off</button>
+                <button type="button" class="button" id="r_off">R-Off</button>
             </p>
 
             <br>
@@ -132,31 +132,31 @@
                         <br />
 
                         <div class="control-top">
-                            <div id="UP" class="control-button">
-                                <span class="arrow arrow-top" onclick="button_clicked('om_el_up')"></span>
-                            </div>
+                            <button type="button" class="control-button" id="om_el_up">
+                                <span class="arrow arrow-top"></span>
+                            </button>
                         </div>
                         <div class="control-middle">
                             <div class="left">
-                                <div id="LEFT" class="control-button" onclick="button_clicked('om_az_down')">
+                                <button type="button" class="control-button" id="om_az_down">
                                     <span class="arrow arrow-left"></span>
-                                </div>
+                                </button>
                             </div>
                             <div class="center">
-                                <div id="STOP" class="control-button">
+                                <button type="button" class="control-button" id="om_stop">
                                     <span class="circle-middle"></span>
-                                </div>
+                                </button>
                             </div>
                             <div class="right">
-                                <div id="RIGHT" class="control-button">
-                                    <span class="arrow arrow-right" onclick="button_clicked('om_az_up')"></span>
-                                </div>
+                                <button type="button" class="control-button" id="om_az_up">
+                                    <span class="arrow arrow-right"></span>
+                                </button>
                             </div>
                         </div>
                         <div class="control-bottom">
-                            <div id="DOWN" class="control-button">
-                                <span class="arrow arrow-bottom" onclick="button_clicked('om_el_down')"></span>
-                            </div>
+                            <button type="button" class="control-button" id="om_el_down">
+                                <span class="arrow arrow-bottom"></span>
+                            </button>
                         </div>
 
                         <br />
@@ -174,7 +174,7 @@
                                 <div class="control-input">
                                     <div class="manual-control">
                                         <label for="om_speed">Speed:</label>
-                                        <input type="number" id="om_speed" name="om_speed" />
+                                        <input type="number" id="om_speed" name="om_speed" placeholder="0-1023" />
                                     </div>
                                 </div>
                                 <br />Azimut:<br />
@@ -199,16 +199,16 @@
                     <h1>Settings</h1>
                     <div class="formcontrols">
                         <table>
-                            <tr><td>Azimut (90-270):</td><td><input type="number" id="oc_azimut"></td></tr>
-                            <tr><td>Elevation (10-50):</td><td><input type="number" id="oc_elevation"></td></tr>
-                            <tr><td>Azimut Offset (+/-90):</td><td><input type="number" id="oc_az_offset"></td></tr>
-                            <tr><td>Elevation Offset (+/-90):</td><td><input type="number" id="oc_el_offset"></tr>
-                            <tr><td>Motor Speed (500-1023):</td><td><input type="number" id="oc_motor_speed"></tr>
+                            <tr><td>Azimut (90-270):</td><td><input type="number" id="oc_azimut" /></td></tr>
+                            <tr><td>Elevation (10-50):</td><td><input type="number" id="oc_elevation" /></td></tr>
+                            <tr><td>Azimut Offset (+/-90):</td><td><input type="number" id="oc_az_offset" /></td></tr>
+                            <tr><td>Elevation Offset (+/-90):</td><td><input type="number" id="oc_el_offset" /></tr>
+                            <tr><td>Motor Speed (500-1023):</td><td><input type="number" id="oc_motor_speed" /></tr>
                         </table>
                         
                         <p>
-                            <input type="button" class="button toggle-overlay settings" value="Back"> 
-                            <input id="savesettings" type="button" class="button" value="Set" onclick="button_clicked_set()"> 
+                            <button id="backsettings" type="button" class="button">Back</button>
+                            <button id="savesettings" type="button" class="button">Set</button>
                         </p>
                     </div>
                 </div>

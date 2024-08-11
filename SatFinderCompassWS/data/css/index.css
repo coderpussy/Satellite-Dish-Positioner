@@ -49,7 +49,7 @@ table {
 }
 
 /* Automatic control CSS style definition */
-input[type=button] {
+button[type=button]:not(.control-button) {
     margin: 0 .25em;
     padding: .4em .8em;
     font-size: 1em;
@@ -143,42 +143,6 @@ select {
     cursor: pointer;
 }
 
-/* Manual control buttons CSS style definition */
-.control-button {
-    width: 4em;
-    height: 4em;
-    background: #4f4f4f;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.control-top,
-.control-middle,
-.control-bottom,
-.control-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.control-top {
-    margin-bottom: 1.5em;
-}
-
-.control-middle .left,
-.control-middle .right,
-.control-middle .center {
-    display: inline-block;
-}
-.control-middle .center {
-    margin-left: 1.5em;
-    margin-right: 1.5em;
-}
-
-.control-bottom {
-    margin-top: 1.5em;
-}
-
 /* Form elements common CSS styles */
 fieldset {
     border: 1px solid;
@@ -219,6 +183,7 @@ fieldset {
 div.formcontrols {
     border-radius: 5px;
     padding: 50px 20px 20px 20px;
+    cursor: default;
 }
 
 /* Overlay default CSS style definition */
@@ -245,6 +210,7 @@ div.formcontrols {
     visibility: visible;
     z-index: 2;
     overflow-y: auto;
+    cursor: pointer;
 }
 
 #overlay-manual .close, #overlay-settings .close {

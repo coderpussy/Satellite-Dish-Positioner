@@ -1,3 +1,40 @@
+/* Manual control buttons CSS style definition */
+.control-button {
+    width: 4rem;
+    height: 4rem;
+    background: #4f4f4f;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.control-top,
+.control-middle,
+.control-bottom,
+.control-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-top {
+    margin-bottom: 1.5em;
+}
+
+.control-middle .left,
+.control-middle .right,
+.control-middle .center {
+    display: inline-block;
+}
+.control-middle .center {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+}
+
+.control-bottom {
+    margin-top: 1.5em;
+}
+
 /* circle common style */
 .circle-middle {
     height: 24px;

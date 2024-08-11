@@ -216,9 +216,11 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     else if (action == "rotor_up_step") handleRotorUpStep();
     else if (action == "rotor_down_step") handleRotorDownStep();
     else if (action == "cal") handleCal();
-    else if (action == "slider1") handleSlider1(json);
-    else if (action == "slider2") handleSlider2(json);
-    else if (action == "slider3") handleSlider3(json);
+    else if (action == "rotor_range") handleRotorRange(json);
+    else if (action == "d_azimut_range") handleAzRange(json);
+    else if (action == "d_elevation_range") handleElRange(json);
+
+    notifyClients();
   }
 }
 
@@ -380,41 +382,41 @@ void handleCal() {
   mpu.Calibrate();
   Serial.println("Calibration complete!");
   WebSerial.print(F("Calibration complete!\n"));
-  notifyClients();
+  //notifyClients();
 }
 
 void handleAzDown() {
   if (dAzimut > -50) dAzimut -= 0.5;
   update_rotor = true;
-  notifyClients();
+  //notifyClients();
 }
 
 void handleAzUp() {
   if (dAzimut < 50) dAzimut += 0.5;
   update_rotor = true;
-  notifyClients();
+  //notifyClients();
 }
 
 void handleElDown() {
   if (dElevation > -8) dElevation -= 0.1;
-  notifyClients();
+  //notifyClients();
 }
 
 void handleElUp() {
   if (dElevation < 8) dElevation += 0.1;
-  notifyClients();
+  //notifyClients();
 }
 
 void handleRotorDown() {
   if (RotorPos > -70) RotorPos -= 1;
   update_rotor = true;
-  notifyClients();
+  //notifyClients();
 }
 
 void handleRotorUp() {
   if (RotorPos < 70) RotorPos += 1;
   update_rotor = true;
-  notifyClients();
+  //notifyClients();
 }
 
 void handleRotorDownStep() {
@@ -425,7 +427,7 @@ void handleRotorDownStep() {
   write_byte_with_parity(0xfe);
   interrupts();
 
-  notifyClients();
+  //notifyClients();
   
   comp_on_time = millis() + 1000;
   rotor_changed = true;
@@ -440,7 +442,7 @@ void handleRotorUpStep() {
   write_byte_with_parity(0xfe);
   interrupts();
 
-  notifyClients();
+  //notifyClients();
   
   comp_on_time = millis() + 1000;
   rotor_changed = true;
@@ -450,7 +452,7 @@ void handleRotorUpStep() {
 void handleOn() {
   digitalWrite(D4, LOW);
 
-  notifyClients();
+  //notifyClients();
   
   auto_on = true;
   rotor_off = false;
@@ -462,7 +464,7 @@ void handleOff() {
   rotor_off = true;
   digitalWrite(D4, HIGH);
 
-  notifyClients();
+  //notifyClients();
   
   noInterrupts();
   write_byte_with_parity(0xE0);
@@ -477,7 +479,7 @@ void handleOff() {
 void handleRotorOff() {
   rotor_off = true;
 
-  notifyClients();
+  //notifyClients();
 
   noInterrupts();
   write_byte_with_parity(0xE0);
@@ -489,28 +491,7 @@ void handleRotorOff() {
   digitalWrite(motor1, HIGH);
 }
 
-void handleSlider1(const JsonDocument& json) {
-  dAzimut = float(json["level"]);
-  Serial.print("Azimut: ");
-  Serial.println(Azimut);
-  WebSerial.print(F("Azimut: "));
-  WebSerial.println(String(Azimut));
-  //update_rotor = true;
-  
-  notifyClients();
-}
-
-void handleSlider2(const JsonDocument& json) {
-  dElevation = float(json["level"]);
-  Serial.print("Elevation: ");
-  Serial.println(Elevation);
-  WebSerial.print(F("Elevation: "));
-  WebSerial.println(String(Elevation));
-  
-  notifyClients();
-}
-
-void handleSlider3(const JsonDocument& json) {
+void handleRotorRange(const JsonDocument& json) {
   RotorPos = float(json["level"]);
   Serial.print("Rotor: ");
   Serial.println(RotorPos);
@@ -518,7 +499,28 @@ void handleSlider3(const JsonDocument& json) {
   WebSerial.println(String(RotorPos));
   update_rotor = true;
   
-  notifyClients();
+  //notifyClients();
+}
+
+void handleAzRange(const JsonDocument& json) {
+  dAzimut = float(json["level"]);
+  Serial.print("Azimut: ");
+  Serial.println(Azimut);
+  WebSerial.print(F("Azimut: "));
+  WebSerial.println(String(Azimut));
+  //update_rotor = true;
+  
+  //notifyClients();
+}
+
+void handleElRange(const JsonDocument& json) {
+  dElevation = float(json["level"]);
+  Serial.print("Elevation: ");
+  Serial.println(Elevation);
+  WebSerial.print(F("Elevation: "));
+  WebSerial.println(String(Elevation));
+  
+  //notifyClients();
 }
 
 void handleOmElUp(const JsonDocument& json) {
@@ -530,7 +532,7 @@ void handleOmElUp(const JsonDocument& json) {
   
   om_elevator = true;
   
-  notifyClients();
+  //notifyClients();
 }
 
 void handleOmElDown(const JsonDocument& json) {
@@ -542,7 +544,7 @@ void handleOmElDown(const JsonDocument& json) {
   
   om_elevator = true;
   
-  notifyClients();
+  //notifyClients();
 }
 
 void om_motor(int direction) {
@@ -803,8 +805,9 @@ void loop(void) {
     WebSerial.print(F("Compass On\n"));
   }
 
+  Azimut = compass.getAzimuth() - Az_PCB_Correction - Az_Offset;
   if (!rotor_changed && !rotor_off)  {
-    Azimut = compass.getAzimuth() - Az_PCB_Correction - Az_Offset;
+    //Azimut = compass.getAzimuth() - Az_PCB_Correction - Az_Offset;
     if (Azimut < 0) Azimut += 360;
     if (Azimut > 360) Azimut -= 360;
   }

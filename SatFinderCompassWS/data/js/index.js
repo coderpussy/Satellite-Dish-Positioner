@@ -24,35 +24,68 @@ var elevation = document.getElementById("elevation");
 var s_azimut = document.getElementById("s_azimut");
 var s_elevation = document.getElementById("s_elevation");
 
-var slider1 = document.getElementById("myAzRange");
-var output1 = document.getElementById("d_azimut");
+var slider1 = document.getElementById("rotor_range");
+var output1 = document.getElementById("rotor");
 
-var slider2 = document.getElementById("myElRange");
-var output2 = document.getElementById("d_elevation");
+var slider2 = document.getElementById("d_azimut_range");
+var output2 = document.getElementById("d_azimut");
 
-var slider3 = document.getElementById("myRotorRange");
-var output3 = document.getElementById("rotor");
+var slider3 = document.getElementById("d_elevation_range");
+var output3 = document.getElementById("d_elevation");
 
-// Slider on change functions
-slider1.onchange = function() {
-    output1.innerHTML = (this.value *1).toFixed(1);
-    websocket.send(JSON.stringify({"action":"slider1","level":this.value}));
+// Slider on change function
+function initSliderChange() {
+    document.querySelectorAll('input[type="range"]').forEach(function (slider) {
+        slider.addEventListener('change', function () {
+            let output = '#'+slider.id.substring(0, slider.id.lastIndexOf('_'));
+            document.querySelector(output).innerHTML = (slider.value *1).toFixed(1);
+
+            websocket.send(JSON.stringify({"action":slider.id,"level":slider.value}));
+        });
+    });
 }
 
-slider2.onchange = function() {
-    output2.innerHTML = (this.value *1).toFixed(1);
-    websocket.send(JSON.stringify({"action":"slider2","level":this.value}));
+// Button on click function with event listener
+function initButtonClick() {
+    document.querySelectorAll('button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            action = btn.id;
+
+            if (action == "savesettings" || action == "backsettings") {
+                if (action == "savesettings") {
+                    saveSettings();
+                } else {
+                    toggleOverlay("settings");
+                }
+            }
+            else if (action == "om_el_up" || action == "om_el_down") {
+                websocket.send(JSON.stringify({"time":om_time.value,"speed":om_speed.value,"action":action}));
+            }
+            else if (action == "om_az_up" || action == "om_az_down") {
+                if (action == "om_az_up") {
+                    if (om_steps.value == "short") {
+                        websocket.send(JSON.stringify({"action":"rotor_up_step"}));
+                    } else {
+                        websocket.send(JSON.stringify({"action":"rotor_up"}));
+                    }
+                } else {
+                    if (om_steps.value == "short") {
+                        websocket.send(JSON.stringify({"action":"rotor_down_step"}));
+                    } else {
+                        websocket.send(JSON.stringify({"action":"rotor_down"}));
+                    }
+                }
+            }
+            else if (action == "om_stop") {
+                return null;
+            } else {
+                websocket.send(JSON.stringify({"action":action}));
+            }
+        });
+    });
 }
 
-slider3.onchange = function() {
-    output3.innerHTML = (this.value *1).toFixed(1);
-    websocket.send(JSON.stringify({"action":"slider3","level":this.value}));
-}
-
-// Save settings event listener
-const saveSettingsBtn = document.getElementById("savesettings");
-saveSettingsBtn.addEventListener('click', saveSettings);
-
+// Init overlay toggle with event listener
 function initToggleOverlay() {
     const overlaymanual = document.querySelector('#overlay-manual');
     const overlaysettings = document.querySelector('#overlay-settings');
@@ -83,6 +116,8 @@ function initWebSocket() {
 
 function onload(event) {
     initWebSocket();
+    initSliderChange();
+    initButtonClick();
     initToggleOverlay();
 }
 
@@ -122,39 +157,15 @@ function onMessage(event) {
     
         s_azimut.innerText = (data.s_azimut *1).toFixed(1);
         s_elevation.innerText = (data.s_elevation *1).toFixed(1);
-        
-        output1.innerHTML = (data.d_azimut*1).toFixed(1);
-        slider1.value = data.d_azimut;
-        
-        output2.innerHTML = (data.d_elevation*1).toFixed(1);
-        slider2.value = data.d_elevation;
-    
-        output3.innerHTML = (data.rotor*1).toFixed(1);
-        slider3.value = data.rotor;
-    }
-}
+            
+        output1.innerHTML = (data.rotor*1).toFixed(1);
+        slider1.value = data.rotor;
 
-function button_clicked(action) {
-    if (action == "om_el_up" || action == "om_el_down") {
-        websocket.send(JSON.stringify({"time":om_time.value,"speed":om_speed.value,"action":action}));
-    }
-    else if (action == "om_az_up" || action == "om_az_down") {
-        if (action == "om_az_up") {
-            if (om_steps.value == "short") {
-                websocket.send(JSON.stringify({"action":"rotor_up_step"}));
-            } else {
-                websocket.send(JSON.stringify({"action":"rotor_up"}));
-            }
-        } else {
-            if (om_steps.value == "short") {
-                websocket.send(JSON.stringify({"action":"rotor_down_step"}));
-            } else {
-                websocket.send(JSON.stringify({"action":"rotor_down"}));
-            }
-        }
-    }
-    else {
-        websocket.send(JSON.stringify({"action":action}));
+        output2.innerHTML = (data.d_azimut*1).toFixed(1);
+        slider2.value = data.d_azimut;
+        
+        output3.innerHTML = (data.d_elevation*1).toFixed(1);
+        slider3.value = data.d_elevation;
     }
 }
 
